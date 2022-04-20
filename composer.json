@@ -1,0 +1,25 @@
+{
+    "name": "innoweb/silverstripe-sendgrid-mailer",
+    "description": "Silverstripe 3 SendGrid Mailer",
+    "type": "silverstripe-module",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "silverstripe", "sendgrid", "mailer", "email"
+    ],
+    "authors": [{
+        "name": "Florian Thoma",
+        "homepage": "https://www.innoweb.com.au"
+    }],
+    "require": {
+        "silverstripe/framework": "^3.7",
+        "sendgrid/sendgrid": "^7.11"
+    },
+    "extra": {
+        "installer-name": "sendgrid-mailer"
+    },
+    "autoload": {
+        "psr-4": {
+            "Innoweb\\SendGrid\\": "src/"
+        }
+    }
+}

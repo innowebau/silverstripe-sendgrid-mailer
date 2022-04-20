@@ -1,0 +1,8 @@
+---
+Name: sendgridmailer
+---
+
+Injector:
+  Mailer:
+    class: Innoweb\SendGrid\SendGridMailer        
+
