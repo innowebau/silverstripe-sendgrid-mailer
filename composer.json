@@ -11,6 +11,7 @@
         "homepage": "https://www.innoweb.com.au"
     }],
     "require": {
+        "ext-json": "*",
         "silverstripe/framework": "^3.7",
         "sendgrid/sendgrid": "^7.11"
     },
