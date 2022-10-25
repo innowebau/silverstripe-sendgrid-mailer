@@ -72,7 +72,9 @@ class SendGridMailer extends Mailer
             $sendGridEmail = new Mail();
             $sendGridEmail->setSubject($subject);
             $sendGridEmail->setFrom($from);
-            $sendGridEmail->addTo($to);
+
+            $to = $this->splitEmailAddresses($to);
+            $sendGridEmail->addTos($to);
 
             $cc = null;
             $bcc = null;
@@ -82,10 +84,14 @@ class SendGridMailer extends Mailer
             if (is_array($customHeaders)) {
                 if (array_key_exists('Cc', $customHeaders)) {
                     $cc = $customHeaders['Cc'];
+                    $cc = $this->splitEmailAddresses($cc);
+                    $cc = array_diff_key($cc, $to);
                     unset($customHeaders['Cc']);
                 }
                 if (array_key_exists('Bcc', $customHeaders)) {
                     $bcc = $customHeaders['Bcc'];
+                    $bcc = $this->splitEmailAddresses($bcc);
+                    $bcc = array_diff_key($bcc, $to);
                     unset($customHeaders['Bcc']);
                 }
                 if (array_key_exists('Reply-To', $customHeaders)) {
@@ -100,11 +106,11 @@ class SendGridMailer extends Mailer
             }
 
             // add cc and bcc
-            if ($cc) {
-                $sendGridEmail->addCc($cc);
+            if ($cc && count($cc)) {
+                $sendGridEmail->addCcs($cc);
             }
-            if ($bcc) {
-                $sendGridEmail->addBcc($bcc);
+            if ($bcc && count($bcc)) {
+                $sendGridEmail->addBccs($bcc);
             }
             if ($replyTo) {
                 $sendGridEmail->setReplyTo($replyTo);
@@ -149,5 +155,21 @@ class SendGridMailer extends Mailer
             user_error(self::class . ': ' . $e->getMessage(), E_USER_ERROR);
             return false;
         }
+    }
+
+    private function splitEmailAddresses($email)
+    {
+        if (is_array($email)) {
+            return $email;
+        }
+        if (is_string($email) && stripos($email, ';') !== false) {
+            $email = explode(';', trim(trim($email), ';'));
+            return array_combine($email, $email);
+        }
+        if (is_string($email) && stripos($email, ',') !== false) {
+            $email = explode(',', trim(trim($email), ','));
+            return array_combine($email, $email);
+        }
+        return [$email => $email];
     }
 }
